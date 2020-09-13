@@ -9,28 +9,27 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class AudiobookLogic {
-    private static boolean playing = false;
-    public static void playPauseBook(ItemStack stack) {
-        playPauseBook(stack.getTag() != null ? BookScreen.readPages(stack.getTag()) : null);
+    public static void playBook(ItemStack stack) {
+        playBook(stack.getTag() != null ? BookScreen.readPages(stack.getTag()) : null);
     }
 
-    public static void playPauseBook(BookScreen.Contents contents) {
+    public static void playBook(BookScreen.Contents contents) {
         List<String> pages = Lists.newArrayListWithCapacity(contents.getPageCount());
         for(int i=0;i<contents.getPageCount();i++)
             pages.add(contents.getPage(i).getString());
-        playPauseBook(pages);
+        playBook(pages);
     }
 
-    public static void playPauseBook(@Nullable List<String> pages) {
-        if(playing && Narrator.getNarrator().active()) {
-            playing = false;
-            Narrator.getNarrator().clear();
-        } else if(pages != null && !pages.isEmpty()) {
-            playing = true;
+    public static void playBook(@Nullable List<String> pages) {
+        if(pages != null && !pages.isEmpty()) {
             StringBuilder output = new StringBuilder();
             for(String page: pages)
                 output.append(" ").append(page);
             Narrator.getNarrator().say(output.toString(), true);
         }
+    }
+
+    public static void stopNarration() {
+        Narrator.getNarrator().clear();
     }
 }

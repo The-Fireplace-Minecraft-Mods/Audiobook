@@ -15,8 +15,11 @@ public abstract class BookScreenMixin {
 
 	@Inject(at = @At(value="HEAD"), method = "keyPressed", cancellable = true)
 	private void keyPressed(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> infoReturnable) {
-		if(Audiobook.audiobookKey.isPressed()) {
-			AudiobookLogic.playPauseBook(contents);
+		if(Audiobook.audiobookKey.matchesKey(keyCode, scanCode)) {
+			AudiobookLogic.playBook(contents);
+			infoReturnable.setReturnValue(true);
+		} else if(Audiobook.stopAudiobookKey.matchesKey(keyCode, scanCode)) {
+			AudiobookLogic.stopNarration();
 			infoReturnable.setReturnValue(true);
 		}
 	}
