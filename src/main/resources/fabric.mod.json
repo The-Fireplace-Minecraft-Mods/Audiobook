@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "id": "audiobook",
+  "version": "${version}",
+
+  "name": "Audiobook",
+  "description": "Have the Narrator read books to you.",
+  "authors": [
+    "The_Fireplace"
+  ],
+  "contact": {
+    "homepage": "https://www.curseforge.com/minecraft/mc-mods/audiobook",
+    "sources": "https://github.com/The-Fireplace-Minecraft-Mods/Audiobook",
+    "issues": "https://github.com/The-Fireplace-Minecraft-Mods/Audiobook/issues"
+  },
+
+  "license": "GPL-3.0-or-later",
+  "icon": "assets/audiobook/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "the_fireplace.audiobook.Audiobook"
+    ],
+    "modmenu": [
+      "the_fireplace.audiobook.ModMenuIntegration"
+    ]
+  },
+  "mixins": [
+    "audiobook.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": ">=0.7.4",
+    "fabric": "*",
+    "minecraft": ">=1.16"
+  },
+
+  "suggests": {
+    "modmenu":  ">=4.0.0"
+  }
+}
