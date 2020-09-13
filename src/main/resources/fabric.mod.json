@@ -21,9 +21,6 @@
   "entrypoints": {
     "client": [
       "the_fireplace.audiobook.Audiobook"
-    ],
-    "modmenu": [
-      "the_fireplace.audiobook.ModMenuIntegration"
     ]
   },
   "mixins": [

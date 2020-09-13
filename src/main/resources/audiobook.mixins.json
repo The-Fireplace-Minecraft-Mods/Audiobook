@@ -4,7 +4,8 @@
   "package": "the_fireplace.audiobook.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "BookScreenMixin"
+    "BookScreenMixin",
+    "MinecraftClientMixin"
   ],
   "injectors": {
     "defaultRequire": 1

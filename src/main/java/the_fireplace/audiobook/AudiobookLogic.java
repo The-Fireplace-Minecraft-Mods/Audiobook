@@ -10,7 +10,7 @@ import java.util.List;
 
 public class AudiobookLogic {
     public static void playBook(ItemStack stack) {
-        playBook(stack.getTag() != null ? BookScreen.readPages(stack.getTag()) : null);
+        playBook(stack.hasTag() && stack.getTag() != null ? BookScreen.readPages(stack.getTag()) : null);
     }
 
     public static void playBook(BookScreen.Contents contents) {
