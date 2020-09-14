@@ -10,14 +10,16 @@ import java.util.List;
 
 public class AudiobookLogic {
     public static void playBook(ItemStack stack) {
-        playBook(stack.hasTag() && stack.getTag() != null ? BookScreen.readPages(stack.getTag()) : null);
+        playBook(stack.hasTag() && stack.getTag() != null ? BookScreen.Contents.create(stack) : null);
     }
 
-    public static void playBook(BookScreen.Contents contents) {
-        List<String> pages = Lists.newArrayListWithCapacity(contents.getPageCount());
-        for(int i=0;i<contents.getPageCount();i++)
-            pages.add(contents.getPage(i).getString());
-        playBook(pages);
+    public static void playBook(@Nullable BookScreen.Contents contents) {
+        if(contents != null) {
+            List<String> pages = Lists.newArrayListWithCapacity(contents.getPageCount());
+            for (int i = 0; i < contents.getPageCount(); i++)
+                pages.add(contents.getPage(i).getString());
+            playBook(pages);
+        }
     }
 
     public static void playBook(@Nullable List<String> pages) {
