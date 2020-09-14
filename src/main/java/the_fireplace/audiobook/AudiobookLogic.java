@@ -15,9 +15,9 @@ public class AudiobookLogic {
 
     public static void playBook(@Nullable BookScreen.Contents contents) {
         if(contents != null) {
-            List<String> pages = Lists.newArrayListWithCapacity(contents.getPageCount());
-            for (int i = 0; i < contents.getPageCount(); i++)
-                pages.add(contents.getPage(i).getString());
+            List<String> pages = Lists.newArrayListWithCapacity(contents.getLineCount());
+            for (int i = 0; i < contents.getLineCount(); i++)
+                pages.add(contents.getLine(i).getString());
             playBook(pages);
         }
     }
