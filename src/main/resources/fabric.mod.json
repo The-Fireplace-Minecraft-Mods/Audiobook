@@ -30,10 +30,7 @@
   "depends": {
     "fabricloader": ">=0.7.4",
     "fabric": "*",
-    "minecraft": "*"
-  },
-
-  "suggests": {
-    "modmenu":  ">=4.0.0"
+    "fabric-key-binding-api-v1": "*",
+    "minecraft": ">=1.14.4"
   }
 }
