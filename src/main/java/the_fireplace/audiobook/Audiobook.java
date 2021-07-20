@@ -1,12 +1,15 @@
 package the_fireplace.audiobook;
 
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.options.KeyBinding;
 
 import java.awt.event.KeyEvent;
 
-public class Audiobook implements ClientModInitializer {
+@Environment(EnvType.CLIENT)
+public final class Audiobook implements ClientModInitializer {
 	public static final String MODID = "audiobook";
 	public static KeyBinding audiobookKey;
 	public static KeyBinding stopAudiobookKey;

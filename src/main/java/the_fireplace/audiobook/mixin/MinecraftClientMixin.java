@@ -1,10 +1,9 @@
 package the_fireplace.audiobook.mixin;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.ingame.BookScreen;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.item.WritableBookItem;
-import net.minecraft.item.WrittenBookItem;
 import net.minecraft.util.Hand;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -16,6 +15,7 @@ import the_fireplace.audiobook.AudiobookLogic;
 
 import javax.annotation.Nullable;
 
+@Environment(EnvType.CLIENT)
 @Mixin(MinecraftClient.class)
 public abstract class MinecraftClientMixin {
 
@@ -23,13 +23,14 @@ public abstract class MinecraftClientMixin {
 
 	@Inject(at = @At(value="HEAD"), method = "handleInputEvents")
 	private void handleInputEvents(CallbackInfo info) {
-		if(Audiobook.audiobookKey.isPressed() && player != null) {
-			//noinspection ConstantConditions
-			if((player.getStackInHand(Hand.MAIN_HAND).getItem() instanceof WrittenBookItem || player.getStackInHand(Hand.MAIN_HAND).getItem() instanceof WritableBookItem) && player.getStackInHand(Hand.MAIN_HAND).hasTag() && !BookScreen.readPages(player.getStackInHand(Hand.MAIN_HAND).getTag()).isEmpty())
+		if (Audiobook.audiobookKey.isPressed() && player != null) {
+			if (AudiobookLogic.isReadableBook(player.getStackInHand(Hand.MAIN_HAND))) {
 				AudiobookLogic.playBook(player.getStackInHand(Hand.MAIN_HAND));
-			else if(player.getStackInHand(Hand.OFF_HAND).getItem() instanceof WrittenBookItem || player.getStackInHand(Hand.OFF_HAND).getItem() instanceof WritableBookItem)
+			} else if (AudiobookLogic.isReadableBook(player.getStackInHand(Hand.OFF_HAND))) {
 				AudiobookLogic.playBook(player.getStackInHand(Hand.OFF_HAND));
-		} else if(Audiobook.stopAudiobookKey.isPressed())
+			}
+		} else if(Audiobook.stopAudiobookKey.isPressed()) {
 			AudiobookLogic.stopNarration();
+		}
 	}
 }
