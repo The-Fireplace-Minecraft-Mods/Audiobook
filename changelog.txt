@@ -1,1 +1,2 @@
-Initial Release
+Change license to MPL-2.0
+Add Russian translation (kyrtion)
