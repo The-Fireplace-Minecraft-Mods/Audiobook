@@ -32,5 +32,13 @@
     "fabric": "*",
     "fabric-key-binding-api-v1": "*",
     "minecraft": ">=1.14.4 <1.17"
+  },
+
+  "custom": {
+    "modmenu": {
+      "links": {
+        "modmenu.discord": "https://discord.gg/QXQYPj5"
+      }
+    }
   }
 }
