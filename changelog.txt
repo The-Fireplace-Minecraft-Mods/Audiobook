@@ -1,2 +1,3 @@
 Change license to MPL-2.0
 Add Russian translation (kyrtion)
+Narration can now be cancelled on the title screen

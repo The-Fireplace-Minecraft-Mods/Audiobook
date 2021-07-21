@@ -29,7 +29,7 @@ public abstract class MinecraftClientMixin {
 			} else if (AudiobookLogic.isReadableBook(player.getStackInHand(Hand.OFF_HAND))) {
 				AudiobookLogic.playBook(player.getStackInHand(Hand.OFF_HAND));
 			}
-		} else if(Audiobook.stopAudiobookKey.isPressed()) {
+		} else if (Audiobook.stopAudiobookKey.isPressed()) {
 			AudiobookLogic.stopNarration();
 		}
 	}
