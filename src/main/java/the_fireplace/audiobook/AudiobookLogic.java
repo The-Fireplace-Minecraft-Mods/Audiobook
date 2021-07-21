@@ -1,5 +1,6 @@
 package the_fireplace.audiobook;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.mojang.text2speech.Narrator;
 import net.fabricmc.api.EnvType;
@@ -8,14 +9,16 @@ import net.minecraft.client.gui.screen.ingame.BookScreen;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.WritableBookItem;
 import net.minecraft.item.WrittenBookItem;
+import net.minecraft.nbt.NbtCompound;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Objects;
 
 @Environment(EnvType.CLIENT)
 public final class AudiobookLogic {
     public static void playBook(ItemStack stack) {
-        playBook(stack.hasTag() && stack.getTag() != null ? BookScreen.Contents.create(stack) : null);
+        playBook(stack.hasNbt() && stack.getNbt() != null ? BookScreen.Contents.create(stack) : null);
     }
 
     public static void playBook(@Nullable BookScreen.Contents contents) {
@@ -45,12 +48,19 @@ public final class AudiobookLogic {
     }
 
     private static boolean isReadable(ItemStack stack) {
-        if (!stack.hasTag()) {
+        if (!stack.hasNbt()) {
             return false;
         }
-        assert stack.getTag() != null;
+        assert stack.getNbt() != null;
 
-        return !BookScreen.readPages(stack.getTag()).isEmpty();
+        return !readPages(stack.getNbt()).isEmpty();
+    }
+
+    private static List<String> readPages(NbtCompound nbt) {
+        ImmutableList.Builder<String> builder = ImmutableList.builder();
+        Objects.requireNonNull(builder);
+        BookScreen.filterPages(nbt, builder::add);
+        return builder.build();
     }
 
     private static boolean isBook(ItemStack stack) {
