@@ -1,0 +1,15 @@
+{
+    "required": true,
+    "minVersion": "0.8",
+    "package": "dev.the_fireplace.audiobook.mixin",
+    "compatibilityLevel": "JAVA_16",
+    "client": [
+        "BookViewScreenMixin",
+        "MinecraftMixin",
+        "ScreenMixin"
+    ],
+    "injectors": {
+        "defaultRequire": 1
+    },
+    "refmap": "${refmap_target}refmap.json"
+}

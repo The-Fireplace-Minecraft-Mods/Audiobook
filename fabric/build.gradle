@@ -1,0 +1,171 @@
+//file:noinspection GroovyAssignabilityCheck
+plugins {
+	id 'fabric-loom' version '1.10-SNAPSHOT'
+	// Mod Hosting Publish
+	id 'com.matthewprenger.cursegradle' version '1.4.0'
+	id 'com.modrinth.minotaur' version '2.+'
+}
+
+archivesBaseName = "${archives_base_name}-Fabric"
+final def mainArtifactFile = layout.buildDirectory.file("libs/${archivesBaseName}-${version}.jar").get().asFile
+final def changelogFile = file('../changelog.txt')
+final def supportedMinecraftVersions = [project.minecraft_version, '1.17']
+
+dependencies {
+	minecraft "com.mojang:minecraft:${minecraft_version}"
+	mappings loom.officialMojangMappings()
+
+	modImplementation "net.fabricmc:fabric-loader:${project.fabric_loader_version}"
+	implementation 'com.google.code.findbugs:jsr305:3.0.2'
+
+	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+
+	compileOnly project(":common")
+}
+
+loom {
+	runs {
+		client {
+			client()
+			setConfigName("Fabric Client")
+			ideConfigGenerated(true)
+			runDir("run")
+		}
+		server {
+			server()
+			setConfigName("Fabric Server")
+			ideConfigGenerated(true)
+			runDir("run")
+		}
+	}
+}
+
+processResources {
+	from project(":common").sourceSets.main.resources
+	inputs.property 'version', project.version
+
+	filesMatching('*.mixins.json') {
+		expand "refmap_target": "${archivesBaseName}-"
+	}
+
+	filesMatching(['**/*.json', 'pack.mcmeta']) {
+		expand project.properties
+	}
+}
+
+tasks.register('sourcesJar', Jar) {
+	dependsOn classes
+	archiveClassifier.set('sources')
+	from project(':common').sourceSets.main.allSource
+	from sourceSets.main.allSource
+}
+
+javadoc {
+	source project(':common').sourceSets.main.allJava
+	source sourceSets.main.allJava
+}
+
+java {
+	withSourcesJar()
+	withJavadocJar()
+}
+
+compileJava {
+	source project(':common').sourceSets.main.allSource
+}
+
+if (hasProperty('curseForgeApiKey') || System.getenv("CURSEFORGE_API_KEY") != null) {
+	curseforge {
+		apiKey = findProperty('curseForgeApiKey') ?: System.getenv("CURSEFORGE_API_KEY")
+		project {
+			id = '408081'
+			changelog = changelogFile
+			releaseType = project.release_type
+			supportedMinecraftVersions.each { value ->
+				addGameVersion value
+			}
+			addGameVersion 'Java 16'
+			addGameVersion 'Fabric'
+			addGameVersion 'Quilt'
+			mainArtifact(mainArtifactFile) {
+				displayName = "$archivesBaseName-$version"
+				relations {
+					requiredDependency 'fabric-api'
+				}
+			}
+		}
+		options {
+			javaIntegration = false
+			forgeGradleIntegration = false
+		}
+	}
+}
+
+if (hasProperty('modrinthApiKey') || System.getenv("MODRINTH_API_KEY") != null) {
+	modrinth {
+		token = findProperty('modrinthApiKey') ?: System.getenv("MODRINTH_API_KEY")
+		projectId = 'qp6VHA4K'
+		versionNumber = "$version+fabric"
+		versionName = project.mod_version
+		uploadFile = mainArtifactFile
+		changelog = changelogFile.getText()
+		versionType = project.release_type
+		gameVersions = supportedMinecraftVersions
+		loaders = [
+			'fabric',
+			'quilt',
+		]
+		dependencies {
+			required.project 'P7dR8mSH'// Fabric API
+		}
+	}
+}
+
+publishing {
+	publications {
+		mavenJava(MavenPublication) {
+			from components.java
+			groupId project.maven_group
+			artifactId project.archivesBaseName
+			version project.version
+			pom {
+				name = project.readable_name
+				packaging = 'jar'
+				description = project.maven_description
+				url = project.modrinth_url
+				scm {
+					connection = "scm:svn:${project.github_url}.git"
+					developerConnection = "scm:svn:${project.github_url}.git"
+					url = project.github_url
+				}
+
+				licenses {
+					license {
+						name = project.license_name
+						url = project.license_url
+					}
+				}
+
+				developers {
+					developer {
+						id = 'the_fireplace'
+						name = 'The_Fireplace'
+						email = 'git@the-fireplace.dev'
+					}
+				}
+			}
+		}
+	}
+	repositories {
+		maven {
+			url = layout.buildDirectory.dir('staging-deploy')
+		}
+	}
+}
+
+afterEvaluate {
+	def publishTask = tasks.find { it.name == 'publish' }
+	if (publishTask) {
+		publishTask.finalizedBy(copyArtifacts)
+	}
+}
