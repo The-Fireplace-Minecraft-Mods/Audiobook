@@ -3,9 +3,11 @@ package dev.the_fireplace.audiobook;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.mojang.text2speech.Narrator;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.BookViewScreen;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.WritableBookItem;
 import net.minecraft.world.item.WrittenBookItem;
@@ -38,7 +40,9 @@ public final class AudiobookLogic
             for (String page : pages) {
                 output.append(" ").append(page);
             }
-            Narrator.getNarrator().say(output.toString(), true);
+            Minecraft minecraft = Minecraft.getInstance();
+            float volume = minecraft.options.getSoundSourceVolume(SoundSource.VOICE) * minecraft.options.getSoundSourceVolume(SoundSource.MASTER);
+            Narrator.getNarrator().say(output.toString(), true, volume);
         }
     }
 
