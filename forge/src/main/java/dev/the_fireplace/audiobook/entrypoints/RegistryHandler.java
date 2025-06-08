@@ -3,10 +3,10 @@ package dev.the_fireplace.audiobook.entrypoints;
 import dev.the_fireplace.audiobook.AudiobookConstants;
 import dev.the_fireplace.audiobook.AudiobookKeys;
 import net.minecraft.client.KeyMapping;
+import net.minecraftforge.client.ClientRegistry;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fmlclient.registry.ClientRegistry;
 
 import java.awt.event.KeyEvent;
 

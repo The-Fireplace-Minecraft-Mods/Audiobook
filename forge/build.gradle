@@ -13,7 +13,7 @@ buildscript {
 plugins {
     id 'java'
     id 'java-library'
-    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
+    id 'net.minecraftforge.gradle' version '[6.0.24,6.2)'
     // Mod Hosting Publish
     id 'com.matthewprenger.cursegradle' version '1.4.0'
     id 'com.modrinth.minotaur' version '2.+'
@@ -22,13 +22,9 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'org.spongepowered.mixin'
 
 archivesBaseName = "${archives_base_name}-Forge"
-def mainArtifactFile = layout.buildDirectory.file("libs/${archivesBaseName}-${version}.jar").get().asFile
-def changelogFile = file('../changelog.txt')
-def supportedMinecraftVersions = [project.minecraft_version, '1.17']
-
-repositories {
-    maven { url 'https://maven.shedaniel.me/' }
-}
+final def mainArtifactFile = layout.buildDirectory.file("libs/${archivesBaseName}-${version}.jar").get().asFile
+final def changelogFile = file('../changelog.txt')
+final def supportedMinecraftVersions = [project.minecraft_version, '1.18.1', '1.18']
 
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
@@ -48,6 +44,8 @@ mixin {
 
 minecraft {
     mappings channel: 'official', version: minecraft_version
+
+    copyIdeResources = true
 
     runs {
         client {
@@ -145,7 +143,7 @@ if (hasProperty('curseForgeApiKey') || System.getenv("CURSEFORGE_API_KEY") != nu
             supportedMinecraftVersions.each { value ->
                 addGameVersion value
             }
-            addGameVersion 'Java 16'
+            addGameVersion 'Java 17'
             addGameVersion 'Forge'
             mainArtifact(mainArtifactFile) {
                 displayName = "$archivesBaseName-$version"
