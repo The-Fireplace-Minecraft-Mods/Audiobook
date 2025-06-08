@@ -149,8 +149,6 @@ if (hasProperty('curseForgeApiKey') || System.getenv("CURSEFORGE_API_KEY") != nu
             addGameVersion 'Forge'
             mainArtifact(mainArtifactFile) {
                 displayName = "$archivesBaseName-$version"
-                relations {
-                }
             }
         }
         options {
@@ -173,8 +171,6 @@ if (hasProperty('modrinthApiKey') || System.getenv("MODRINTH_API_KEY") != null) 
         loaders = [
             'forge',
         ]
-        dependencies {
-        }
     }
 }
 
