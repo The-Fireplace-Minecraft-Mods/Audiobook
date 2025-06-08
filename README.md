@@ -8,4 +8,4 @@ A client-side Minecraft mod that allows the system narrator to read books to you
 ## Current Target Game Versions
 New releases are not planned to occur outside of these version ranges. Existing versions outside these ranges may still function, but are no longer supported.
 - Fabric: Minecraft 1.17 - Current
-- Forge: Minecraft 1.17 - 1.20.6
+- Forge: Minecraft 1.17 - 1.20.4

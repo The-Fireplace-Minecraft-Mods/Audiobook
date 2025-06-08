@@ -4,10 +4,13 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.mojang.text2speech.Narrator;
 import net.minecraft.client.gui.screens.inventory.BookViewScreen;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.WritableBookItem;
 import net.minecraft.world.item.WrittenBookItem;
+import net.minecraft.world.item.component.WritableBookContent;
+import net.minecraft.world.item.component.WrittenBookContent;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -16,7 +19,7 @@ import java.util.Objects;
 public final class AudiobookLogic
 {
     public static void playBook(ItemStack stack) {
-        playBook(stack.hasTag() && stack.getTag() != null ? BookViewScreen.BookAccess.fromItem(stack) : null);
+        playBook(stack.getTags().toArray().length > 0 ? BookViewScreen.BookAccess.fromItem(stack) : null);
     }
 
     public static void playBook(@Nullable BookViewScreen.BookAccess contents) {
@@ -48,18 +51,20 @@ public final class AudiobookLogic
     }
 
     private static boolean isReadable(ItemStack stack) {
-        if (!stack.hasTag()) {
-            return false;
-        }
-        assert stack.getTag() != null;
-
-        return !readPages(stack.getTag()).isEmpty();
+        return !readPages(stack).isEmpty();
     }
 
-    private static List<String> readPages(CompoundTag nbt) {
+    private static List<String> readPages(ItemStack stack) {
         ImmutableList.Builder<String> builder = ImmutableList.builder();
         Objects.requireNonNull(builder);
-        BookViewScreen.loadPages(nbt, builder::add);
+        WrittenBookContent writtenBookContent = stack.get(DataComponents.WRITTEN_BOOK_CONTENT);
+        if (writtenBookContent != null) {
+            builder.addAll(writtenBookContent.getPages(false).stream().map((component) -> component.plainCopy().getString()).toList());
+        }
+        WritableBookContent writableBookContent = stack.get(DataComponents.WRITABLE_BOOK_CONTENT);
+        if (writableBookContent != null) {
+            builder.addAll(writableBookContent.getPages(false).toList());
+        }
         return builder.build();
     }
 
